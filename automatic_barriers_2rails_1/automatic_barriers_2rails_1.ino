@@ -50,7 +50,7 @@ void blinkLights() {
 void noLights() {
       digitalWrite(LED1_PIN, LOW);
       digitalWrite(LED2_PIN, LOW);
-      digitalWrite(LED0_PIN, LOW; }
+      digitalWrite(LED0_PIN, LOW); 
 }
 
 
