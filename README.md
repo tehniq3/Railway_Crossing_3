@@ -8,3 +8,7 @@ schematic (gate open)
 schematic (gate closed)
 ![schematic (gate closed1)](https://github.com/tehniq3/Railway_Crossing_3/blob/main/schematic/closed_1.PNG)
 ![schematic (gate closed2)](https://github.com/tehniq3/Railway_Crossing_3/blob/main/schematic/closed_2.PNG)
+
+
+schematic for last sketches
+![schematic_new](https://github.com/tehniq3/Railway_Crossing_3/blob/main/schematic/us_barriers_3.png)
