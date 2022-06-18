@@ -49,8 +49,8 @@ unsigned long time_end_of_train[NUM_SENSORS];
 unsigned long count_delay = 1000;
 unsigned long time_count;
 
-byte actual_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
-byte previous_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+byte actual_state[NUM_SENSORS] = {0,0,0,0}; // niq_added this variable
+byte previous_state[NUM_SENSORS] = {0,0,0,0}; // niq_added this variable
 
 
 void blinkLights() {
