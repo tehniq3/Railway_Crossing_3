@@ -2,6 +2,8 @@
 // ver.2 - niq_ro added bidirectional trigger.. not good solution
 // ver.2.x - niq_ro used parts from https://rudysarduinoprojects.wordpress.com/2020/09/23/fun-with-arduino-42-railway-crossing-multi-track-two-way/
 // ver.2.y - niq_ro added opposite direction for second servo...
+// ver.2.z - direction for 2nd servo can be choosen as opposite or same with 1st servo
+// ver.2.z.1 - added condition for previous state of sensor for count 
 
 int UP = 1700; //1400;  //2300;     // MKO Upper limit of gate travel; adjust these two values to get the travel required
 int DOWN = 800; //1100;   // MKO lower limit of gate travel
@@ -31,6 +33,8 @@ byte blink_enabled = 0;   // MKO                                 _
 unsigned long time_to_blink;
 unsigned long time_to_close_gate = millis();  //MKO set intial millis times
 
+byte sens = 1;  // 0 = same direction
+                // 1 = oposite direction
 
 #define NUM_SENSORS           4 // two sensors per track, one left and one right of the gate
 byte sensor_pin[NUM_SENSORS]  = {5,8,9,10}; // sensor pin numbers
@@ -44,6 +48,10 @@ unsigned long time_for_servo_step;
 unsigned long time_end_of_train[NUM_SENSORS];
 unsigned long count_delay = 1000;
 unsigned long time_count;
+
+byte actual_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+byte previous_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+
 
 void blinkLights() {
     if(millis() > time_to_blink) {
@@ -74,7 +82,10 @@ void closeGate() {
         digitalWrite(SERVO1_PIN, LOW);
         delayMicroseconds(20000-angle);   //balance of 20000 cycle
         digitalWrite(SERVO2_PIN, HIGH);
+        if (sens == 1)
         delayMicroseconds(-angle+UP);    //position
+        else
+        delayMicroseconds(angle+DOWN);    //position
         digitalWrite(SERVO2_PIN, LOW);
         delayMicroseconds(20000-angle);   //balance of 20000 cycle
         blinkLights();
@@ -103,7 +114,10 @@ void openGate() {
         digitalWrite(SERVO1_PIN, LOW);
         delayMicroseconds(20000-angle);   //balance of 20000 cycle
         digitalWrite(SERVO2_PIN, HIGH);
+        if (sens == 1)
         delayMicroseconds(-angle+UP);    //position
+        else
+        delayMicroseconds(angle+DOWN);    //position
         digitalWrite(SERVO2_PIN, LOW);
         delayMicroseconds(20000-angle);   //balance of 20000 cycle
         blinkLights();
@@ -251,14 +265,19 @@ angle = 1;
 void loop() {
 
   for (byte i = 0; i < NUM_SENSORS; i++) {
-    if(sensor_state[i] == 1) { // detect arrival of new train
-      if(!digitalRead(sensor_pin[i])) { // train detected
+
+
+        if(sensor_state[i] == 1) { // detect arrival of new train
+//      if(!digitalRead(sensor_pin[i])) { // train detected
+
+     if (!digitalRead(sensor_pin[i]) and (previous_state[i] == 1)) {
      //   if(millis() >  time_count + count_delay)
      //   {
         train_counter++;
         time_count = millis();
         delay(10);
         sensor_state[i] = 0;
+        actual_state[i] == 0;
         if(i%2) n = i - 1; else n = i + 1;
         sensor_state[n] = 2; // buddy sensor departure detection enabled
         Serial.print("Arrival, sensor no.");
@@ -269,7 +288,9 @@ void loop() {
       }
     }
     else if(sensor_state[i] > 1) {
-      if(!digitalRead(sensor_pin[i])) { // departure detected
+  //    if(!digitalRead(sensor_pin[i])) { // departure detected
+   if(!digitalRead(sensor_pin[i]) and (previous_state[i] == 1))
+   { // departure detected
         time_end_of_train[i] = millis() + (unsigned long)END_OF_TRAIN_DELAY;
         if(i%2) n = i - 1; else n = i + 1;
         sensor_state[n] = 1; // buddy sensor enabled again
@@ -412,6 +433,12 @@ void loop() {
         }
     break;
   }
+
+for (byte i = 0; i < NUM_SENSORS; i++)
+{
+previous_state[i] = actual_state[i]; // change last values
+actual_state[i] = digitalRead(sensor_pin[i]);  // read actua state of each sensor
+}
 
 
   if(blink_enabled == 1) { blinkLights(); }
