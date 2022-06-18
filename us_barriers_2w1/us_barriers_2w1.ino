@@ -5,6 +5,7 @@
 // ver.2.z - direction for 2nd servo can be choosen as opposite or same with 1st servo
 // ver.2.w - added LCD1602 on i2c
 // ver.2.w.1 - added blink for white light with gate open + changed count trains method
+// ver.2.w.2 - added condition for last state of sensor for count 
 
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>  // //YWROBOT
@@ -14,7 +15,7 @@ LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x3F for a 16 chars
 
 int UP = 1700; //1400;  //2300;     // MKO Upper limit of gate travel; adjust these two values to get the travel required
 int DOWN = 800; //1100;   // MKO lower limit of gate travel
-int GateSpeed = 3; // MKO set to an integer between say 1 and 8; lower = slower;
+int GateSpeed = 2; // MKO set to an integer between say 1 and 8; lower = slower;
                    //   to set speed that gate moves from up to down and back
 int angle = 0;     // MKO variable to track angle of ate opening (thougb it has nothing to do with degrees of travel) 
 
@@ -49,6 +50,9 @@ byte sensor_pin[NUM_SENSORS]  = {5,8}; // sensor pin numbers
 #define NUM_SENSORS           4 // two sensors per track, one left and one right of the gate
 byte sensor_pin[NUM_SENSORS]  = {5,8,9,10}; // sensor pin numbers
 
+byte actual_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+byte previous_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+
 
 //byte state = 1, train_counter, n;
 byte state = 1;
@@ -59,7 +63,7 @@ byte end_of_train[NUM_SENSORS];       // 0 idle, 1 end of train detected
 //unsigned long time_to_close_gate;
 unsigned long time_for_servo_step;
 unsigned long time_end_of_train[NUM_SENSORS];
-unsigned long count_delay = 2000;
+unsigned long count_delay = 100;
 unsigned long time_count1, time_count2 ;
 
 int train_counter, train_counter1, train_counter2;
@@ -295,53 +299,57 @@ led2 = 0;
 
 void loop() {
 
-if(millis() >  time_count1 + count_delay)
-{
-if(digitalRead(sensor_pin[0]) == LOW)
+//if (millis() >  time_count1 + count_delay)
+//{
+if ((digitalRead(sensor_pin[0]) == 0) and (previous_state[0] == 1))
 {
   train_counter1 = train_counter1 + 1;
   time_count1 = millis();
   delay(10);
+  actual_state[0] = 0;
   Serial.print("Trains:    ");
   Serial.println(train_counter1);
 }
-}
+//}
 
-if(millis() >  time_count1 + count_delay)
-{
-if(digitalRead(sensor_pin[1]) == LOW)
+//if (millis() >  time_count1 + count_delay)
+//{
+if ((digitalRead(sensor_pin[1]) == 0) and (previous_state[1] == 1))
 {
   train_counter1 = train_counter1 - 1;
   time_count1 = millis();
   delay(10);
+  actual_state[1] = 0;
   Serial.print("Trains:    ");
   Serial.println(train_counter1);
 }
-}
+//}
 
-if(millis() >  time_count2 + count_delay)
-{
-if(digitalRead(sensor_pin[2]) == LOW)
+//if (millis() >  time_count2 + count_delay)
+//{
+if ((digitalRead(sensor_pin[2]) == 0) and (previous_state[2] == 1))
 {
   train_counter2 = train_counter2 + 1;
   time_count2 = millis();
   delay(10);
+  actual_state[2] = 0;
   Serial.print("Trains:    ");
   Serial.println(train_counter2);
 }
-}
+//}
 
-if(millis() >  time_count2 + count_delay)
-{
-if(digitalRead(sensor_pin[3]) == LOW)
+//if (millis() >  time_count2 + count_delay)
+//{
+if ((digitalRead(sensor_pin[3]) == 0) and (previous_state[3] == 1))
 {
   train_counter2 = train_counter2 - 1;
   time_count2 = millis();
   delay(10);
+  actual_state[3] = 0;
   Serial.print("Trains:    ");
   Serial.println(train_counter2);
 }
-}       
+//}       
         
 
 if (train_counter1 < 0)
@@ -507,6 +515,12 @@ train_counter = train_counter1 + 100*train_counter2;
         }
     break;
   }
+
+for (byte i = 0; i < NUM_SENSORS; i++)
+{
+previous_state[i] = actual_state[i]; // change last values
+actual_state[i] = digitalRead(sensor_pin[i]);  // read actua state of each sensor
+}
 
 
   if(blink_enabled == 1) { blinkLights(); }
