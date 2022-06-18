@@ -50,8 +50,8 @@ byte sensor_pin[NUM_SENSORS]  = {5,8}; // sensor pin numbers
 #define NUM_SENSORS           4 // two sensors per track, one left and one right of the gate
 byte sensor_pin[NUM_SENSORS]  = {5,8,9,10}; // sensor pin numbers
 
-byte actual_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
-byte previous_state[NUM_SENSORS] = {1,1,1,1}; // niq_added this variable
+byte actual_state[NUM_SENSORS] = {0,0,0,0}; // niq_added this variable
+byte previous_state[NUM_SENSORS] = {0,0,0,0}; // niq_added this variable
 
 
 //byte state = 1, train_counter, n;
