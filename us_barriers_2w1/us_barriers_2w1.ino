@@ -15,7 +15,7 @@ LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x3F for a 16 chars
 
 int UP = 1700; //1400;  //2300;     // MKO Upper limit of gate travel; adjust these two values to get the travel required
 int DOWN = 800; //1100;   // MKO lower limit of gate travel
-int GateSpeed = 2; // MKO set to an integer between say 1 and 8; lower = slower;
+int GateSpeed = 3; // MKO set to an integer between say 1 and 8; lower = slower;
                    //   to set speed that gate moves from up to down and back
 int angle = 0;     // MKO variable to track angle of ate opening (thougb it has nothing to do with degrees of travel) 
 
@@ -63,7 +63,7 @@ byte end_of_train[NUM_SENSORS];       // 0 idle, 1 end of train detected
 //unsigned long time_to_close_gate;
 unsigned long time_for_servo_step;
 unsigned long time_end_of_train[NUM_SENSORS];
-unsigned long count_delay = 100;
+unsigned long count_delay = 400;
 unsigned long time_count1, time_count2 ;
 
 int train_counter, train_counter1, train_counter2;
@@ -299,8 +299,8 @@ led2 = 0;
 
 void loop() {
 
-//if (millis() >  time_count1 + count_delay)
-//{
+if (millis() >  time_count1 + count_delay)
+{
 if ((digitalRead(sensor_pin[0]) == 0) and (previous_state[0] == 1))
 {
   train_counter1 = train_counter1 + 1;
@@ -310,10 +310,10 @@ if ((digitalRead(sensor_pin[0]) == 0) and (previous_state[0] == 1))
   Serial.print("Trains:    ");
   Serial.println(train_counter1);
 }
-//}
+}
 
-//if (millis() >  time_count1 + count_delay)
-//{
+if (millis() >  time_count1 + count_delay)
+{
 if ((digitalRead(sensor_pin[1]) == 0) and (previous_state[1] == 1))
 {
   train_counter1 = train_counter1 - 1;
@@ -323,10 +323,10 @@ if ((digitalRead(sensor_pin[1]) == 0) and (previous_state[1] == 1))
   Serial.print("Trains:    ");
   Serial.println(train_counter1);
 }
-//}
+}
 
-//if (millis() >  time_count2 + count_delay)
-//{
+if (millis() >  time_count2 + count_delay)
+{
 if ((digitalRead(sensor_pin[2]) == 0) and (previous_state[2] == 1))
 {
   train_counter2 = train_counter2 + 1;
@@ -336,10 +336,10 @@ if ((digitalRead(sensor_pin[2]) == 0) and (previous_state[2] == 1))
   Serial.print("Trains:    ");
   Serial.println(train_counter2);
 }
-//}
+}
 
-//if (millis() >  time_count2 + count_delay)
-//{
+if (millis() >  time_count2 + count_delay)
+{
 if ((digitalRead(sensor_pin[3]) == 0) and (previous_state[3] == 1))
 {
   train_counter2 = train_counter2 - 1;
@@ -349,7 +349,7 @@ if ((digitalRead(sensor_pin[3]) == 0) and (previous_state[3] == 1))
   Serial.print("Trains:    ");
   Serial.println(train_counter2);
 }
-//}       
+}       
         
 
 if (train_counter1 < 0)
@@ -362,19 +362,20 @@ if (train_counter2 < 0)
             train_counter21 = train_counter2;        
         
         lcd.setCursor(0,0);
-        lcd.print("Line 1,trains:");
+        lcd.print("Line 1,trains");
+        if (train_counter1 < 10) lcd.print(" "); 
         if  (train_counter1 < 0) lcd.print(">"); 
         if  (train_counter1 == 0) lcd.print(" ");
         if  (train_counter1 > 0) lcd.print("<");        
-        //if (train_counter1 < 10) lcd.print(" "); 
+        
         lcd.print(train_counter11);
         //lcd.print(" ");
         lcd.setCursor(0,1);
-        lcd.print("Line 2,trains:");
+        lcd.print("Line 2,trains");
+        if (train_counter1 < 10) lcd.print(" "); 
         if  (train_counter2 < 0) lcd.print(">"); 
         if  (train_counter2 == 0) lcd.print(" ");
-        if  (train_counter2 > 0) lcd.print("<");        
-        //if (train_counter1 < 10) lcd.print(" "); 
+        if  (train_counter2 > 0) lcd.print("<");       
         lcd.print(train_counter21);
         //lcd.print(" ");
 
