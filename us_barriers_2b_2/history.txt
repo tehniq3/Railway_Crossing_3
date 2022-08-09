@@ -1,0 +1,5 @@
+// based on info from https://rudysarduinoprojects.wordpress.com/2020/09/23/fun-with-arduino-42-railway-crossing-multi-track-two-way/
+// inital changes by MKO
+// niq_ro changed few lines
+// ver.2 - added bidirectional trigger
+// ver.2.1 - removed sounds at opening gate phase
