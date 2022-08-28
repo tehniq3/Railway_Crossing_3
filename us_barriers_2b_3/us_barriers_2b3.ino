@@ -73,8 +73,8 @@ void noLights()
 
 void fadeLights() 
 {
-  analogWrite(LED1_PIN, brightness);
-  analogWrite(LED2_PIN, 255-brightness);
+  analogWrite(LED3_PIN, brightness);
+  analogWrite(LED4_PIN, 255-brightness);
   
 if(millis() > time_to_fade) 
   {
