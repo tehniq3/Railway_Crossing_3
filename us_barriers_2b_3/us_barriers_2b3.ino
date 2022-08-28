@@ -17,7 +17,7 @@ int angle = 0;     // MKO variable to track angle of gate opening (thougb it has
 int trains = 0;
 int trains0 = 7;
 
-#define BLINK_SPEED  700 // [ms] smaller number is faster blinking
+//#define BLINK_SPEED  700 // [ms] smaller number is faster blinking
 #define SERVO_PIN      2  //MKO SERVO_PIN was 3 in JS original sketch. Change to D2
 #define LED0_PIN       A0  // 3rd led 
 #define LED1_PIN       A1  // blink led 1
@@ -52,7 +52,7 @@ void blinkLights()
 {
     if(millis() > time_to_blink) 
     {
-      time_to_blink = millis() + (unsigned long)BLINK_SPEED;
+      time_to_blink = millis() + (unsigned long)blink_speed;;
       led1 = !led1;
       led2 = !led1;
     
