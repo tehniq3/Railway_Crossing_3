@@ -4,3 +4,17 @@
 // ver.2 - niq_ro added bidirectional trigger
 // ver.2.b.2 - niq_ro removed sounds at opening
 // ver.2.b.3 - niq_ro adding fade lights 
+
+
+#define SERVO_PIN      2  //MKO SERVO_PIN was 3 in JS original sketch. Change to D2
+#define LED0_PIN       A0  // 3rd led 
+#define LED1_PIN       A1  // blink led 1
+#define LED2_PIN       A2  // blink led 2
+#define LED3_PIN       5  // fade led 1
+#define LED4_PIN       6  // fade led 2
+#define SENSOR1_PIN    7  //MKO SENSOR1_PIN was 10 in original sketch. Change to D5 
+#define SENSOR2_PIN    8  //MKO SENSOR2_PIN was 11 in original sketch. Change to D8
+#define SENSOR3_PIN    9  //niq_ro added 3rd sensor
+#define SENSOR4_PIN    10 //niq_ro added 4th sensor
+
+#define speakerPin 11 // Can be either 3 or 11, two PWM outputs connected to Timer 2; using 11 in this sketch
