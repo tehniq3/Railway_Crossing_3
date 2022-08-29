@@ -116,6 +116,7 @@ void closeGate()
         Serial.print("transition = ");
         Serial.println(transition); 
         */
+        fadeLights();
       }
         digitalWrite(SERVO_PIN, LOW); 
 }
@@ -140,6 +141,7 @@ void openGate()
         Serial.print("transition = ");
         Serial.println(transition);
         */
+        fadeLights();
       }
         digitalWrite(SERVO_PIN, LOW); 
 }
