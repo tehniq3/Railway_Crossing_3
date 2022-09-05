@@ -17,7 +17,6 @@ int angle = 0;     // MKO variable to track angle of gate opening (thougb it has
 int trains = 0;
 int trains0 = 7;
 
-//#define BLINK_SPEED  700 // [ms] smaller number is faster blinking
 #define SERVO_PIN      2  //MKO SERVO_PIN was 3 in JS original sketch. Change to D2
 #define LED0_PIN       A0  // 3rd led 
 #define LED1_PIN       A1  // blink led 1
@@ -274,7 +273,7 @@ void setup() {
   Serial.print("transition = ");
   Serial.println(transition);
 
-blink_speed = 2*(255/fade_delay + time_to_stop);
+blink_speed = fade_delay*255/fadeAmount + time_to_stop;  // good formula
 angle = 1;
 openGate();
 }
