@@ -1,6 +1,6 @@
 // inital changes by MKO
 // niq_ro changed few lines
-
+// used https://www.arduino.cc/reference/en/libraries/servo/writemicroseconds/ for servo
 
 #define GATE_DELAY  4000 // [ms] delay time before gate closes once train detected on Sensor 1
 
